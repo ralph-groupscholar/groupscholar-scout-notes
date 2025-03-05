@@ -4,7 +4,10 @@ A SQL-first data model for capturing scholarship scouting notes, tagging risk si
 
 ## Features
 - Normalized schema for organizations, opportunities, scouting notes, and tags
+- Contact and update tracking for scouting relationships
+- Follow-up task tracking with workload visibility
 - Weekly summary view for reporting cadence
+- Tag signal and deadline pipeline views for coverage planning
 - Seed data for realistic demo and analytics validation
 
 ## Tech Stack
@@ -28,10 +31,18 @@ psql "$DATABASE_URL" -f sql/002_seed.sql
 ```sql
 SELECT * FROM gs_scout_notes.weekly_summary;
 
+SELECT * FROM gs_scout_notes.tag_signal_summary;
+
+SELECT * FROM gs_scout_notes.deadline_pipeline;
+
 SELECT o.title, sn.summary, sn.confidence_score
 FROM gs_scout_notes.scout_notes sn
 JOIN gs_scout_notes.opportunities o ON o.opportunity_id = sn.opportunity_id
 ORDER BY sn.created_at DESC;
+
+SELECT * FROM gs_scout_notes.open_followups;
+
+SELECT * FROM gs_scout_notes.scout_workload;
 ```
 
 ## Notes
