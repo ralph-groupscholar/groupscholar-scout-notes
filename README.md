@@ -8,6 +8,7 @@ A SQL-first data model for capturing scholarship scouting notes, tagging risk si
 - Follow-up task tracking with workload visibility
 - Weekly summary view for reporting cadence
 - Tag signal and deadline pipeline views for coverage planning
+- Review quality tracking with stale-note detection
 - Seed data for realistic demo and analytics validation
 
 ## Tech Stack
@@ -43,6 +44,10 @@ ORDER BY sn.created_at DESC;
 SELECT * FROM gs_scout_notes.open_followups;
 
 SELECT * FROM gs_scout_notes.scout_workload;
+
+SELECT * FROM gs_scout_notes.review_quality_summary;
+
+SELECT * FROM gs_scout_notes.notes_needing_review;
 ```
 
 ## Notes
