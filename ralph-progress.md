@@ -9,3 +9,4 @@
 - Applied schema and seed updates to the production database.
 - Added note review tracking with quality summary and stale-review view.
 - Added follow-up task tracking table with workload and open-task views.
+- Seeded note review data and backfilled production entries.

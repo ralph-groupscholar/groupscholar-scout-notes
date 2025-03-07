@@ -179,3 +179,36 @@ JOIN gs_scout_notes.scout_notes sn
 JOIN gs_scout_notes.tags t
   ON t.label = ntd.tag_label
 ON CONFLICT (note_id, tag_id) DO NOTHING;
+
+WITH review_data AS (
+  SELECT * FROM (VALUES
+    ('Avery Reed', 'Strong alignment with our STEM partner schools; early outreach recommended.', 'Morgan Shaw', 4.6, 'Clear alignment notes; add evidence on rural outreach reach.', true, NOW() - INTERVAL '3 days'),
+    ('Jordan Lee', 'Fellowship requires local sponsor; cohort capacity limited to 40.', 'Taylor Kim', 4.1, 'Solid risk capture; clarify sponsor constraints timeline.', true, NOW() - INTERVAL '5 days'),
+    ('Sam Patel', 'Grant offers flexible funding and mentorship network.', 'Riley Quinn', 4.8, 'Strong insight capture with actionable follow-up.', false, NOW() - INTERVAL '2 days')
+  ) AS v(scout_name, summary, reviewer_name, review_score, review_summary, followup_needed, reviewed_at)
+)
+INSERT INTO gs_scout_notes.note_reviews (
+  note_id,
+  reviewer_name,
+  review_score,
+  review_summary,
+  followup_needed,
+  reviewed_at
+)
+SELECT
+  sn.note_id,
+  rd.reviewer_name,
+  rd.review_score,
+  rd.review_summary,
+  rd.followup_needed,
+  rd.reviewed_at
+FROM review_data rd
+JOIN gs_scout_notes.scout_notes sn
+  ON sn.scout_name = rd.scout_name
+ AND sn.summary = rd.summary
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM gs_scout_notes.note_reviews nr
+  WHERE nr.note_id = sn.note_id
+    AND nr.reviewer_name = rd.reviewer_name
+);
